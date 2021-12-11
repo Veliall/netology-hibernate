@@ -1,6 +1,7 @@
 package com.example.netologyhibernate.api;
 
 import com.example.netologyhibernate.entity.PersonEntity;
+import com.example.netologyhibernate.excteption.AppException;
 import com.example.netologyhibernate.repository.PersonsRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,16 @@ public class PersonsController {
 
     @GetMapping("/by-city")
     public List<PersonEntity> getPersonsByCity(@RequestParam String city) {
-        return repo.getPersonsByCity(city);
+        return repo.findAllByCityOfLiving(city);
+    }
+
+    @GetMapping("/by-age")
+    public List<PersonEntity> getPersonsByAge(@RequestParam int age) {
+        return repo.findAllByAgeLessThenOrderByAge(age);
+    }
+
+    @GetMapping("/by-name-and-surname")
+    public List<PersonEntity> getPersonsByNameAndSurname(@RequestParam String name, @RequestParam String surname) {
+        return repo.findAllByNameAndSurname(name, surname).orElseThrow(AppException::new);
     }
 }

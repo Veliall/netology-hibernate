@@ -1,24 +1,23 @@
 package com.example.netologyhibernate.repository;
 
 import com.example.netologyhibernate.entity.PersonEntity;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import com.example.netologyhibernate.entity.PersonEntityPK;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Igor Khristiuk on 10.12.2021
  */
 
-@Repository
-@RequiredArgsConstructor
-public class PersonsRepo {
-    private final EntityManager entityManager;
+public interface PersonsRepo extends JpaRepository<PersonEntity, PersonEntityPK> {
+    List<PersonEntity> findAllByCityOfLiving(String city);
 
-    public List<PersonEntity> getPersonsByCity(String city) {
-        return entityManager.createQuery("SELECT p FROM persons p WHERE p.city_of_living = :city", PersonEntity.class)
-                .setParameter("city", city)
-                .getResultList();
-    }
+    @Query("SELECT p FROM persons p WHERE p.personEntityPK.age < :age ORDER BY p.personEntityPK.age")
+    List<PersonEntity> findAllByAgeLessThenOrderByAge(int age);
+
+    @Query("SELECT p FROM persons p WHERE p.personEntityPK.name = :name AND p.personEntityPK.surname = :surname")
+    Optional<List<PersonEntity>> findAllByNameAndSurname(String name, String surname);
 }
