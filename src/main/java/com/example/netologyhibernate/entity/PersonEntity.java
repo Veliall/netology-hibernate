@@ -25,7 +25,7 @@ public class PersonEntity {
     @EmbeddedId
     PersonEntityPK personEntityPK;
 
-    private String phone_number;
-    private String city_of_living;
+    private String phoneNumber;
+    private String cityOfLiving;
 
 }
