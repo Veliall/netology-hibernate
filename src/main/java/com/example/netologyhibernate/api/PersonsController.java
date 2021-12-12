@@ -1,13 +1,13 @@
 package com.example.netologyhibernate.api;
 
+import com.example.netologyhibernate.UserService;
 import com.example.netologyhibernate.entity.PersonEntity;
+import com.example.netologyhibernate.entity.User;
 import com.example.netologyhibernate.excteption.AppException;
 import com.example.netologyhibernate.repository.PersonsRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,23 +16,37 @@ import java.util.List;
  */
 
 @RestController()
-@RequestMapping("/persons")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class PersonsController {
     private final PersonsRepo repo;
+    private final UserService userService;
 
-    @GetMapping("/by-city")
+    @GetMapping("persons/by-city")
     public List<PersonEntity> getPersonsByCity(@RequestParam String city) {
         return repo.findAllByCityOfLiving(city);
     }
 
-    @GetMapping("/by-age")
+    @GetMapping("persons/by-age")
     public List<PersonEntity> getPersonsByAge(@RequestParam int age) {
         return repo.findAllByAgeLessThenOrderByAge(age);
     }
 
-    @GetMapping("/by-name-and-surname")
+    @GetMapping("persons/by-name-and-surname")
     public List<PersonEntity> getPersonsByNameAndSurname(@RequestParam String name, @RequestParam String surname) {
         return repo.findAllByNameAndSurname(name, surname).orElseThrow(AppException::new);
     }
+
+    @GetMapping("persons")
+    public List<PersonEntity> getAll() {
+        return repo.findAll();
+    }
+
+    @PostMapping("registration")
+    public ResponseEntity addUser(@RequestBody User user) {
+        userService.saveUser(user);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

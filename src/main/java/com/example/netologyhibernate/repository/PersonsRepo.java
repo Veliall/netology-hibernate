@@ -20,4 +20,6 @@ public interface PersonsRepo extends JpaRepository<PersonEntity, PersonEntityPK>
 
     @Query("SELECT p FROM persons p WHERE p.personEntityPK.name = :name AND p.personEntityPK.surname = :surname")
     Optional<List<PersonEntity>> findAllByNameAndSurname(String name, String surname);
+
+    List<PersonEntity> findAll();
 }
